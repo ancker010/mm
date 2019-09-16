@@ -59,7 +59,7 @@ plugins:
 
 author:
   name   : "Ryan Harden"
-  avatar : "/assets/images/bio-photo.jpg"
+  avatar : "/assets/images/bio-photo.png"
   bio    : "Research Network Architect, always interested in poking around and learning new things."
   links:
     - label: "Website"
