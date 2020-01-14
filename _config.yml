@@ -129,7 +129,7 @@ prose:
     - README.md
   media: 'assets/images'
   metadata:
-    "":
+    _pages:
       - name: "layout"
         field:
           element: "hidden"
