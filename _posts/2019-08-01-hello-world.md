@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: posts
 title: "Hello, World."
 date: 2019-08-01 9:00:00 -0600
 comments: false

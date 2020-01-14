@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: posts
 title: "Second Post"
 date: 2019-08-01 9:45:00 -0600
 comments: false

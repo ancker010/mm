@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: posts
 title: "Use GitLab CI/CD to Publish Script RPM/DEB to your servers."
 date: 2019-08-10 08:00:00 -0600
 comments: false
