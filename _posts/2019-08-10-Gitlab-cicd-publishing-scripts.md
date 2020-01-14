@@ -1,19 +1,19 @@
 ---
+published: false
 layout: posts
-title: "Use GitLab CI/CD to Publish Script RPM/DEB to your servers."
-date: 2019-08-10 08:00:00 -0600
+title: Use GitLab CI/CD to Publish Script RPM/DEB to your servers.
+date: '2019-08-10 08:00:00 -0600'
 comments: false
 hidden: false
-published: false
-categories:
-  - Blog
 tags:
+  - python
+  - networking
   - CICD
   - gitlab
-  - python
   - automation
-  - networking
   - rpm
+categories:
+  - blog
 ---
 
 Introduction
@@ -137,5 +137,3 @@ Testing
 
 Versioning
 =======
-
-
