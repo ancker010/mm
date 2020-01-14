@@ -185,6 +185,7 @@ prose:
           element: "multiselect"
           label: "Add Categories"
           placeholder: "Add Categories"
+          options:
             - name: "Blog"
               value: "blog"
           alterable: true
