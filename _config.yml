@@ -13,7 +13,7 @@
 # you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
-title: mttf.io
+title: Mean Time to Failure
 email: ancker@ancker.net
 description: >- # this means to ignore newlines until "baseurl:"
   Mean Time To Failure is a blog about everything from research networking, automation, python, smart home tech, cycling, and
