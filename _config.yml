@@ -133,7 +133,7 @@ prose:
       - name: "layout"
         field:
           element: "hidden"
-          value: "page"
+          value: "pages"
       - name: "title"
         field:
           element: "text"
@@ -159,7 +159,7 @@ prose:
       - name: "layout"
         field:
           element: "hidden"
-          value: "post"
+          value: "posts"
       - name: "title"
         field:
           element: "text"
