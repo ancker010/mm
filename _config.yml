@@ -144,6 +144,11 @@ prose:
           element: "checkbox"
           label: "Published"
           value: false
+      - name: "comments"
+        field:
+          element: "checkbox"
+          label: "Comments Enabled"
+          value: false
       - name: "categories"
         field:
           element: "multiselect"
@@ -162,8 +167,13 @@ prose:
           value: ""
       - name: "published"
         field:
-          element: "checkbox"
+          element: "hidden"
           label: "Published"
+          value: false
+      - name: "comments"
+        field:
+          element: "checkbox"
+          label: "Comments Enabled"
           value: false
       - name: "categories"
         field:
