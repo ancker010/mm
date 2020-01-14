@@ -149,6 +149,11 @@ prose:
           element: "checkbox"
           label: "Comments Enabled"
           value: false
+      - name: "permalink"
+        field:
+          element: "text"
+          label: "Permalink"
+          value: ""
       - name: "categories"
         field:
           element: "multiselect"
@@ -180,4 +185,17 @@ prose:
           element: "multiselect"
           label: "Add Categories"
           placeholder: "Add Categories"
+            - name: "Blog"
+              value: "blog"
+          alterable: true
+      - name: "tags"
+        field:
+          element: "multiselect"
+          label: "Add Tags"
+          placeholder: "Choose Tags"
+          options:
+            - name: "Python"
+              value: "python"
+            - name: "Networking"
+              value: "networking"
           alterable: true
