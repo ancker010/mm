@@ -14,6 +14,6 @@ tags:
   - Adafruit
   - webhook
 ---
-## A New Post
+## Controlling an Adafruit DotStar LED Strip with a webhook API
 
-Enter text in [Markdown](http://daringfireball.net/projects/markdown/). Use the toolbar above, or click the **?** button for formatting help.
+
