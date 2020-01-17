@@ -2,7 +2,7 @@
 published: false
 layout: posts
 comments: false
-title: Webhook API Driven DotStar LEDs with a Raspberry Pi
+title: DIY Logic Pro X Recording Light with Raspberry Pi and DotStar LED
 categories:
   - blog
   - Raspberry Pi
@@ -14,6 +14,5 @@ tags:
   - Adafruit
   - webhook
 ---
-## Controlling an Adafruit DotStar LED Strip with a webhook API
-
+## DIY Logic Pro X Recording Light with Raspberry Pi and DotStar LED
 
