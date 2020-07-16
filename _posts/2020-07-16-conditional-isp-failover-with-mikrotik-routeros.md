@@ -3,6 +3,14 @@ published: false
 layout: posts
 comments: false
 title: Conditional ISP Failover with Mikrotik/RouterOS
+categories:
+  - blog
+tags:
+  - networking
+  - Home-Automation
+  - Hubitat
+  - Cellular
+  - Mikrotik
 ---
 ## Conditional ISP Failover with Mikrotik/RouterOS
 
