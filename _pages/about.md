@@ -5,12 +5,12 @@ title: "About"
 
 Hello, my name is Ryan Harden. If you've made it here, you probably already know that. I have lots of hobbies but this page will be mostly centered on technology and higher education related items.
 
-I've spent the entirety of my professional career in higher education, a 7-year stint at the University of Illinois at Urbana/Champaign and then a shift to the University of Chicago, where I've been for roughly seven years as well.
+I've spent the entirety of my professional career in higher education, a nearly 8-year stint at the University of Illinois at Urbana/Champaign followed by another nearly 8-year stint at the University of Chicago after recently making a move to Internet2.
 
-My current title is "Research and Advanced Networking Architect", which is an extremely broad title that covers just about anything related to networking and research. I tend to focus on the researchy stuff, which I find way more interesting than enterprise networking.
+My current title is "Senior Cyberinfrastructure Security Architect", which is an broad title that covers topics including network security (not info security), network automation and configuration auditing, routing security, and more.
 
-My latest pet project(s) are around network automation and scripting. I'm particularly interested in building CI/CD processes around network device configuration compliance and mitigation techniques.
+Expect this blog to be mostly technical in nature, but not necessarily limited to networking. I'm also a guitarist and cyclist who likes to play with the latest gadgets. I also have a huge interest in home automation, which is tangentially networking related.
 
-Expect a lot of the above and other random posts about the state of tech in higher education.
+Expect a lot of the above and other random posts about the state of tech, higher education, and the world at large.
 
 Ciao!
