@@ -3,14 +3,14 @@ published: true
 layout: posts
 comments: false
 title: Conditional ISP(Cellular) Failover with Mikrotik/RouterOS
-categories:
-  - blog
 tags:
   - networking
   - Home-Automation
   - Hubitat
   - Cellular
   - Mikrotik
+categories:
+  - blog
 ---
 ### Preface
 I've been long-time subscriber to home automation. It started with the original Nest thermostat. I loved being able to control it via an app on my phone. The 'learning' part wasn't as interesting since shortly after installing it, I switched to 100% remote work.
