@@ -33,12 +33,61 @@ In order for this to work, a handful of things need to be in place.
  - I'm using a Mikrotik hEX.
 2. No special routing config, VLANs, or existing policies.
  - You can likely make it work, but these won't work without modifications.
-3. The secondary ISP modem operates in a "Router" mode, and has a "DMZ" or "Forward All" mode to a specific client.
+3. The secondary ISP modem operates in a "**Router**" mode, and has a "**DMZ**" or "**Forward All**" mode to a specific client.
  - My Cellular/LTE modem provides a subnet 192.168.5.0/24 for clients. I've statically assigned 192.168.5.10 to the "lte" interface on my Mikrotik, and set this IP in the modem DMZ settings.
- - Some Cellular modems provide a "Passthrough" option where the cellular IP gets assigned directly to the client. I couldn't get that to work reliably, so I chose to leave the modem in "Router" mode. If I decide to work more on that, I'll come back and add an addendum.
+ - Some Cellular modems provide a "**Passthrough/Bridge**" option where the cellular IP gets assigned directly to the client. I couldn't get that to work reliably, so I chose to leave the modem in "**Router**" mode. If I decide to work more on that, I'll come back and add an addendum.
  - For reference: I'm using a Netgear LB1120 LTE Modem.
  
- ### ISP/Cellular Setup
+### ISP/Cellular Setup
  
 The first thing you need to do is get a secondary ISP or figure out your cellular plan. While researching cellular options for another project, I came across a [pre-paid SIM card](https://www.embeddedworks.net/wsim4827/) that offers unlimited data at 64kbps on T-Mobile, AND provides a static IP option. Static IP isn't required, but it means I can add it to my smokeping config pretty easily. Of course, you need to do some research to ensure that whatever cellular plan you decide to go with is supported by whatever Cellular Modem you plan to purchase. The Netgear LB1120 seems to support most of the common bands in the US/Canada. You'll need to verify for your region and area.
 
+Once you have your SIM and modem in hand, obviously you'll need to verify everything works. I won't go into how you should do that, but I essentially connected it to my laptop and made sure I could browse the internet via cellular. It worked surprisingly well for a 64kbps connection speed.
+
+Once you've verified it works and passes traffic. Plug the client part into your Mikrotik. I chose ether5.
+
+### Mikrotik Set Up
+
+First, you'll need to set up/name the interface something useful. I chose '**lte**', not to be confused with '**lteN**' interfaces that might get created if you plug an LTE modem into the USB port on some Mikrotik devices.
+
+```
+interface ethernet
+set [ find default-name=ether5 ] l2mtu=1598 mac-address=00:0D:B9:aa:bb:cc name=lte speed=100Mbps
+```
+
+Next you'll need to set up a static default route towards the LTE modem. There are two important bits to pay attention to here.
+1. Set the distance to something higher than your primary ISP. (I chose 5)
+2. The routing-mark will be used later on. Make sure you set it to something that makes sense. (I chose use-lte).
+
+```
+ip route
+add comment="Default Route to LTE" distance=5 gateway=192.168.5.1 routing-mark=use-lte
+```
+
+Next, we'll set up some firewall NAT and Mangle rules to massage the traffic to our will.
+
+To start, we'll need to set up NAT for packets egressing the **lte** interface.
+```
+ip firewall nat
+add action=masquerade chain=srcnat out-interface=lte
+```
+
+Next a handful of Mange rules are necessary to mark connections and packets to ensure that when packets are received on the **lte** interface, they egress back out the **lte** interface. 
+
+This was a little confusing me at first, so I'll try to explain what they do in order.
+1. Any packets received on the **lte** interface, set a connection-mark of **lte-packets**.
+2. Any packets that are forwarded by the router that have a connection-mark of **lte-packets**, set the routing-mark **use-lte**.
+3. Any packets originated by the router itself and sent out the **lte** interface, set the routing-mark **use-lte**.
+
+```
+ip firewall mangle
+add action=mark-connection chain=prerouting in-interface=lte new-connection-mark=lte-packets passthrough=no
+add action=mark-routing chain=prerouting connection-mark=lte-packets new-routing-mark=use-lte passthrough=no
+add action=mark-routing chain=output connection-mark=lte-packets new-routing-mark=use-lte passthrough=no
+```
+
+Last, we need to set up a specific rule to set the **use-lte** routing-mark on packets from my Hubitat hub. BUT, we'll want to keep it disabled so it only gets used when the primary ISP is down.
+
+```
+add action=mark-routing chain=prerouting comment=from-hubitat-rule disabled=yes new-routing-mark=use-lte passthrough=no src-address=10.100.100.82
+```
