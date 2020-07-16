@@ -165,3 +165,27 @@ ip firewall filter
 add action=drop chain=input comment="Drop inbound from 8.8.8.8 on lte for netwatch script" in-interface=lte src-address=8.8.8.8
 ```
 
+And if you want, (this part isn't required), I set up a second netwatch rule to check the status of the cellular modem itself. It can definitely be improved as I'm just checking whether the modem itself responds, NOT whether the cellular service is working. If it's down for whatever reason, there's no reason for the first netwatch rule to try and alter anything. I set it up as follows.
+
+```
+tool netwatch
+add comment="Disable the 8.8.8.8 check if LTE is dead." down-script=":set [/tool netwatch set [ find host=8.8.8.8 ] disabled=yes]];" host=192.168.5.1 interval=15s up-script=\
+    ":set [/tool netwatch set [ find host=8.8.8.8 ] disabled=no]];"
+```
+
+### Testing Time 2!
+
+Everything is in place for automatic failover (and back) if your primary ISP fails. But how do we test it without unplugging primary ISP? 
+
+Simple. You add a static route to point your chosen test host (8.8.8.8 in my case) to the lte interface, where we have it blocked. And since we have a netwatch rule for 8.8.8.8, it will appear down and trigger our failover. Here's how I built it. It's disabled by default.
+
+```
+ip route
+add disabled=yes distance=1 dst-address=8.8.8.8/32 gateway=192.168.5.1
+```
+Any time you want to test your failover, you can toggle this static route and traffic from your chosen host (my Hubitat) switch to the cellular connection and back.
+
+### Conclusion
+There you have it. A functional automatic failover system. Is it perfect? No. But it will get the job done 90%+ of the time.
+
+Feel free to drop me a line on twitter if you have any questions.
