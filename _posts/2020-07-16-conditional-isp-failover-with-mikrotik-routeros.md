@@ -2,7 +2,7 @@
 published: false
 layout: posts
 comments: false
-title: Conditional ISP Failover with Mikrotik/RouterOS
+title: Conditional ISP(Cellular) Failover with Mikrotik/RouterOS
 categories:
   - blog
 tags:
@@ -14,7 +14,8 @@ tags:
 ---
 ## Conditional ISP Failover with Mikrotik/RouterOS
 
-Preface: I've been long-time subscriber to home automation. It started with the original Nest thermostat. I loved being able to control it via an app on my phone. The 'learning' part wasn't as interesting since shortly after installing it, I switched to 100% remote work.
+### Preface
+I've been long-time subscriber to home automation. It started with the original Nest thermostat. I loved being able to control it via an app on my phone. The 'learning' part wasn't as interesting since shortly after installing it, I switched to 100% remote work.
 
 Not too long after the Nest, I was introduced to the Staples Connect hub. It had Z-Wave and Zigbee radios and also an app for my phone. I quickly installed a handful of z-wave door sensors and got a z-wave garage door controller. Getting alerts on opened doors and being able to control the garage door from afar hooked me. Everything must be automated.
 
@@ -22,4 +23,22 @@ Staples Connect was eventually sunset so I moved to SmartThings. SmartThings sta
 
 So how did all of this lead to this blog post? **Alerts**
 
-While our ISP is generally pretty stable, I didn't like the idea of missing an alert or being unable to check the status of the house while away from home due to an ISP outage. 
+While our ISP is generally pretty stable, I didn't like the idea of missing an alert or being unable to check the status of the house while away from home due to an ISP outage. I wanted a way to switch over to a secondary ISP (Cellular in this case) only when the main ISP has an outage.
+
+Let's get started!
+
+### Assumptions
+In order for this to work, a handful of things need to be in place.
+1. Your main home router needs to be a recent Mikrotik capable of running 6.x. (Tested on 6.47)
+ - I'm using a Mikrotik hEX.
+2. No special routing config, VLANs, or existing policies.
+ - You can likely make it work, but these won't work without modifications.
+3. The secondary ISP modem operates in a "Router" mode, and has a "DMZ" or "Forward All" mode to a specific client.
+ - My Cellular/LTE modem provides a subnet 192.168.5.0/24 for clients. I've statically assigned 192.168.5.10 to the "lte" interface on my Mikrotik, and set this IP in the modem DMZ settings.
+ - Some Cellular modems provide a "Passthrough" option where the cellular IP gets assigned directly to the client. I couldn't get that to work reliably, so I chose to leave the modem in "Router" mode. If I decide to work more on that, I'll come back and add an addendum.
+ - For reference: I'm using a Netgear LB1120 LTE Modem.
+ 
+ ### ISP/Cellular Setup
+ 
+The first thing you need to do is get a secondary ISP or figure out your cellular plan. While researching cellular options for another project, I came across a [pre-paid SIM card](https://www.embeddedworks.net/wsim4827/) that offers unlimited data at 64kbps on T-Mobile, AND provides a static IP option. Static IP isn't required, but it means I can add it to my smokeping config pretty easily. Of course, you need to do some research to ensure that whatever cellular plan you decide to go with is supported by whatever Cellular Modem you plan to purchase. The Netgear LB1120 seems to support most of the common bands in the US/Canada. You'll need to verify for your region and area.
+
