@@ -3,7 +3,7 @@ permalink: /about/
 title: "About"
 ---
 
-Hello, my name is Ryan Harden. If you've made it here, you probably already know that. I have lots of hobbies but this page will be mostly centered on technology and higher education related items.
+Hello, my name is Ryan Harden. If you've made it here, you probably already know that.
 
 I've spent the entirety of my professional career in higher education, a nearly 8-year stint at the University of Illinois at Urbana/Champaign followed by another nearly 8-year stint at the University of Chicago after recently making a move to Internet2.
 
