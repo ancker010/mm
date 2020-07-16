@@ -91,3 +91,24 @@ Last, we need to set up a specific rule to set the **use-lte** routing-mark on p
 ```
 add action=mark-routing chain=prerouting comment=from-hubitat-rule disabled=yes new-routing-mark=use-lte passthrough=no src-address=10.100.100.82
 ```
+
+### Testing time!
+
+Everything we've done so far is all you really need to allow your chosen device to use the cellular modem. You can manually enable that last rule and see if your device can ping/talk via cellular. Go ahead and try it!
+
+Note: If you are trying to trigger a push notification from a Hubitat hub, you'll likely find that it doesn't work. The reason is that the Hubitat hub maintains a constant TCP session with a host in AWS for push notifications.
+
+Okay..what's that mean. Well, Mikrotik/RouterOS does connection tracking for NAT. By default the timeout for **TCP Established** is set to 1 day. WAY longer than I want to wait for things to fail over in an outage (and frankly longer than I've ever had an ISP outage). You can change this to something lower with the following. There may be rammifications for setting this too low, but likely nothing too worrisome.
+
+```
+ip firewall connection tracking
+set tcp-established-timeout=2m
+```
+Or if you don't want to wait...
+```
+ip firewall connection print
+... find all of the connections for your chosen device ...
+ip firewall connection remove <numbers>
+... <numbers> represents the list of connections you found.
+```
+
