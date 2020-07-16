@@ -12,8 +12,6 @@ tags:
   - Cellular
   - Mikrotik
 ---
-## Conditional ISP Failover with Mikrotik/RouterOS
-
 ### Preface
 I've been long-time subscriber to home automation. It started with the original Nest thermostat. I loved being able to control it via an app on my phone. The 'learning' part wasn't as interesting since shortly after installing it, I switched to 100% remote work.
 
