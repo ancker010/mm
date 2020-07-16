@@ -50,6 +50,8 @@ Once you've verified it works and passes traffic. Plug the client part into your
 
 First, you'll need to set up/name the interface something useful. I chose '**lte**', not to be confused with '**lteN**' interfaces that might get created if you plug an LTE modem into the USB port on some Mikrotik devices.
 
+NOTE: You can do 100% of this via the Winbox/Webfig interface. It's just WAY easier to provide CLI commands instead of million screenshots. You can probably figure out where to look in the GUI tools by reading the commands...
+
 ```
 interface ethernet
 set [ find default-name=ether5 ] l2mtu=1598 mac-address=00:0D:B9:aa:bb:cc name=lte speed=100Mbps
@@ -92,11 +94,23 @@ Last, we need to set up a specific rule to set the **use-lte** routing-mark on p
 add action=mark-routing chain=prerouting comment=from-hubitat-rule disabled=yes new-routing-mark=use-lte passthrough=no src-address=10.100.100.82
 ```
 
+And last-last, we should probably add some firewall filters to prevent nefarious things from happening. 
+1. We allow inbound **ICMP** (so things like smokeping pointed at the cellular IP will work).
+2. We allow only **ESTABLISHED** and **RELATED** packets to ingress the **lte** interface. 
+3. And then we drop everything else.
+
+```
+/ip firewall filter
+add action=accept chain=input connection-state=established,related in-interface=lte protocol=icmp
+add action=accept chain=forward connection-state=established,related in-interface=lte
+add action=drop chain=input in-interface=lte
+```
+
 ### Testing time!
 
 Everything we've done so far is all you really need to allow your chosen device to use the cellular modem. You can manually enable that last rule and see if your device can ping/talk via cellular. Go ahead and try it!
 
-Note: If you are trying to trigger a push notification from a Hubitat hub, you'll likely find that it doesn't work. The reason is that the Hubitat hub maintains a constant TCP session with a host in AWS for push notifications.
+**NOTE:** If you are trying to trigger a push notification from a Hubitat hub, you'll likely find that it doesn't work. The reason is that the Hubitat hub maintains a constant TCP session with a host in AWS for push notifications.
 
 Okay..what's that mean. Well, Mikrotik/RouterOS does connection tracking for NAT. By default the timeout for **TCP Established** is set to 1 day. WAY longer than I want to wait for things to fail over in an outage (and frankly longer than I've ever had an ISP outage). You can change this to something lower with the following. There may be rammifications for setting this too low, but likely nothing too worrisome.
 
@@ -110,5 +124,44 @@ ip firewall connection print
 ... find all of the connections for your chosen device ...
 ip firewall connection remove <numbers>
 ... <numbers> represents the list of connections you found.
+```
+
+### So how do we make it happen automatically?
+
+Mikrotik has a built-in function called a **netwatch**. It's not very eloquent, but it allows you to run commands (or scripts) based on whether a given IP is reachable via ping. We'll set up two netwatch rules below.
+
+**NOTE:** There are likely better ways to do this, like with scripts or some other method. This worked for me and has proved to be pretty simple to get up and running.
+
+First you need to pick an IP on the general internet that should pretty much always be reachable. I chose Google's public resolver **8.8.8.8**. (This IP probably gets Gbps of ICMP traffic...) 
+
+Then we create a netwatch rule. There a few interesting bits here, so I'll try to explain.
+The rule has three components. 
+1. Target host (and how own to test, I chose **8.8.8.8** and every **30s**).
+2. A **down-script**. (A list of commands to run when 8.8.8.8 is unreachable. Primary ISP Down)
+3. An **up-script**. (A list of commands to run when 8.8.8.8 is back. Primary ISP Up)
+
+Down-script, unpacked.
+1. Enable the rule for packets from the Hubitat hub we set up (but disabled) earlier.
+ - `:set [/ip firewall mangle set [ find comment=\"from-hubitat-rule\" ] disabled=no];`
+
+Up-script, unpacked. 
+1. Re-Disable the rule for packets from the Hubitat hub. (Remember, we only want it enabled when the primary ISP is down.)
+ - `:set [/ip firewall mangle set [ find comment=\"from-hubitat-rule\" ] disabled=yes];`
+2. Clear/Remove all connections that are currently marked with the lte-packets connection-mark. (We do this to make the Hubitat hub immediately establish a new connection with the notification server back on the Primary ISP.)
+ - `/ip firewall connection remove [ find connection-mark=lte-packets ]`
+
+```
+tool netwatch
+add comment="Check for primary ISP function (ping 8.8.8.8). Disable/Enable Hubitat table/rules based on result." down-script=\
+    ":set [/ip firewall mangle set [ find comment=\"from-hubitat-rule\" ] disabled=no];" host=8.8.8.8 interval=30s up-script=\
+    ":set [/ip firewall mangle set [ find comment=\"from-hubitat-rule\" ] disabled=yes];\
+    \n/ip firewall connection remove [ find connection-mark=lte-packets ]"
+```
+
+The clever among you might say "But Ryan, since we picked 8.8.8.8, wouldn't that be reachable via Cellular as well?" Yes, it would. So we create a firewall filter to block it on the **lte** interface. 
+
+```
+ip firewall filter
+add action=drop chain=input comment="Drop inbound from 8.8.8.8 on lte for netwatch script" in-interface=lte src-address=8.8.8.8
 ```
 
