@@ -53,7 +53,7 @@ First, you'll need to set up/name the interface something useful. I chose '**lte
 NOTE: You can do 100% of this via the Winbox/Webfig interface. It's just WAY easier to provide CLI commands instead of million screenshots. You can probably figure out where to look in the GUI tools by reading the commands...
 
 ```
-interface ethernet
+/interface ethernet
 set [ find default-name=ether5 ] l2mtu=1598 mac-address=00:0D:B9:aa:bb:cc name=lte speed=100Mbps
 ```
 
@@ -62,7 +62,7 @@ Next you'll need to set up a static default route towards the LTE modem. There a
 2. The routing-mark will be used later on. Make sure you set it to something that makes sense. (I chose use-lte).
 
 ```
-ip route
+/ip route
 add comment="Default Route to LTE" distance=5 gateway=192.168.5.1 routing-mark=use-lte
 ```
 
@@ -70,7 +70,7 @@ Next, we'll set up some firewall NAT and Mangle rules to massage the traffic to 
 
 To start, we'll need to set up NAT for packets egressing the **lte** interface.
 ```
-ip firewall nat
+/ip firewall nat
 add action=masquerade chain=srcnat out-interface=lte
 ```
 
@@ -82,7 +82,7 @@ This was a little confusing me at first, so I'll try to explain what they do in 
 3. Any packets originated by the router itself and sent out the **lte** interface, set the routing-mark **use-lte**.
 
 ```
-ip firewall mangle
+/ip firewall mangle
 add action=mark-connection chain=prerouting in-interface=lte new-connection-mark=lte-packets passthrough=no
 add action=mark-routing chain=prerouting connection-mark=lte-packets new-routing-mark=use-lte passthrough=no
 add action=mark-routing chain=output connection-mark=lte-packets new-routing-mark=use-lte passthrough=no
@@ -115,14 +115,14 @@ Everything we've done so far is all you really need to allow your chosen device 
 Okay..what's that mean. Well, Mikrotik/RouterOS does connection tracking for NAT. By default the timeout for **TCP Established** is set to 1 day. WAY longer than I want to wait for things to fail over in an outage (and frankly longer than I've ever had an ISP outage). You can change this to something lower with the following. There may be rammifications for setting this too low, but likely nothing too worrisome.
 
 ```
-ip firewall connection tracking
+/ip firewall connection tracking
 set tcp-established-timeout=2m
 ```
 Or if you don't want to wait...
 ```
-ip firewall connection print
+/ip firewall connection print
 ... find all of the connections for your chosen device ...
-ip firewall connection remove <numbers>
+/ip firewall connection remove <numbers>
 ... <numbers> represents the list of connections you found.
 ```
 
@@ -151,7 +151,7 @@ Up-script, unpacked.
  - `/ip firewall connection remove [ find connection-mark=lte-packets ]`
 
 ```
-tool netwatch
+/tool netwatch
 add comment="Check for primary ISP function (ping 8.8.8.8). Disable/Enable Hubitat table/rules based on result." down-script=\
     ":set [/ip firewall mangle set [ find comment=\"from-hubitat-rule\" ] disabled=no];" host=8.8.8.8 interval=30s up-script=\
     ":set [/ip firewall mangle set [ find comment=\"from-hubitat-rule\" ] disabled=yes];\
@@ -161,14 +161,14 @@ add comment="Check for primary ISP function (ping 8.8.8.8). Disable/Enable Hubit
 The clever among you might say "But Ryan, since we picked 8.8.8.8, wouldn't that be reachable via Cellular as well?" Yes, it would. So we create a firewall filter to block it on the **lte** interface. 
 
 ```
-ip firewall filter
+/ip firewall filter
 add action=drop chain=input comment="Drop inbound from 8.8.8.8 on lte for netwatch script" in-interface=lte src-address=8.8.8.8
 ```
 
 And if you want, (this part isn't required), I set up a second netwatch rule to check the status of the cellular modem itself. It can definitely be improved as I'm just checking whether the modem itself responds, NOT whether the cellular service is working. If it's down for whatever reason, there's no reason for the first netwatch rule to try and alter anything. I set it up as follows.
 
 ```
-tool netwatch
+/tool netwatch
 add comment="Disable the 8.8.8.8 check if LTE is dead." down-script=":set [/tool netwatch set [ find host=8.8.8.8 ] disabled=yes]];" host=192.168.5.1 interval=15s up-script=\
     ":set [/tool netwatch set [ find host=8.8.8.8 ] disabled=no]];"
 ```
@@ -180,7 +180,7 @@ Everything is in place for automatic failover (and back) if your primary ISP fai
 Simple. You add a static route to point your chosen test host (8.8.8.8 in my case) to the lte interface, where we have it blocked. And since we have a netwatch rule for 8.8.8.8, it will appear down and trigger our failover. Here's how I built it. It's disabled by default.
 
 ```
-ip route
+/ip route
 add disabled=yes distance=1 dst-address=8.8.8.8/32 gateway=192.168.5.1
 ```
 Any time you want to test your failover, you can toggle this static route and traffic from your chosen host (my Hubitat) switch to the cellular connection and back.
