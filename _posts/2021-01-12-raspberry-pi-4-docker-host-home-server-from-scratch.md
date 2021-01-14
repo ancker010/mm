@@ -40,7 +40,7 @@ This post is mostly for my own notes, but others might find it helpful. Here I'l
  - Setting up some backups scripts, and using Telegraf to monitor stats about the Pi itself and Docker
 
 
-### Buying
+### Buying - Open your wallet
 
 First off, what do you need to buy to do even do this? 
 
@@ -51,6 +51,8 @@ First off, what do you need to buy to do even do this?
 5. RPi4 Heat Sinks (maybe not required, but really helps!)
 6. RPi4 Active Cooling Fan (also not required, but really helps)
 7. Short USB-A to USB-A Cable (don't use the U shaped USB thing included with the add-on cards)
+8. Power cables. USB-C cable/brick that can deliver up to 3 Amps at 5V-DC. And a second 5.5x2.5mm cable that can deliver the same specs.
+9. USB Power Bank. Any power bank that can deliver 3 Amps per port will work.
 
 #### Links to Stuff
 1. [RPi4 Kit - via eBay](https://www.ebay.com/itm/Vilros-Raspberry-Pi-4-with-USB-C-Micro-HDMI-Adapters/313125561738?ssPageName=STRK%3AMEBIDX%3AIT&var=612153551075&_trksid=p2057872.m2749.l2649)
@@ -60,4 +62,10 @@ First off, what do you need to buy to do even do this?
 5. Included in RPi4 Kit Linked above. There's also a handy mini-HDMI to HDMI dongle.
 6. [Active Cooling Fan](https://www.amazon.com/gp/product/B07Y9LFP1J/ref=ppx_yo_dt_b_asin_title_o03_s00?ie=UTF8&psc=1)
 7. [USB Cable](https://www.amazon.com/gp/product/B0891X229X/ref=ppx_yo_dt_b_asin_title_o02_s00?ie=UTF8&psc=1)
+8. [USB-C for Power](https://www.amazon.com/gp/product/B0765CFXBM/ref=ppx_yo_dt_b_asin_title_o04_s01?ie=UTF8&psc=1) and [USB-to-5.5x2.5mm for power](https://www.amazon.com/gp/product/B00ZUE4WBE/ref=ppx_yo_dt_b_asin_title_o04_s01?ie=UTF8&psc=1)
+9. [USB Power Bank](https://www.amazon.com/gp/product/B08HN6JK7N/ref=ppx_yo_dt_b_asin_title_o04_s02?ie=UTF8&psc=1) (Yeah-yeah, this is only 2.4A per port, but that's probably going to be fine for my uses.)
+
+### Building - Putting it all together
+
+
 
