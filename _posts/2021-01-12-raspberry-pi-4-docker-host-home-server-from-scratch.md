@@ -25,6 +25,7 @@ This post is mostly for my own notes, but others might find it helpful. Here I'l
 
 - You already have a functioning home network.
 - You know the basics of linux, networking, docker, hardware, etc.
+- You can work your way around basic applications, like the Raspberry Pi Imager app
 - other stuff I remember later
 
 ## Outline
@@ -67,5 +68,10 @@ First off, what do you need to buy to do even do this?
 
 ### Building - Putting it all together
 
+### Booting - Getting it running
 
+#### Create the SD card using the latest Raspberry Pi OS
+
+#### Mount the SD card in your computer to enable headless/ssh
+[Follow this guide](https://www.shellhacks.com/raspberry-pi-enable-ssh-headless-without-monitor/)
 
