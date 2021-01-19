@@ -19,7 +19,7 @@ tags:
 ---
 ## Introduction
 
-This post is mostly for my own notes, but others might find it helpful. Here I'll document the process of buying, building, booting, and configuring a Raspberry Pi 4 (8GB) as a home server that runs various applications in Docker. Of course, you don't necessarily *need* to do all of the steps below to get a functional server, this is just what I did to get my Pis up and running how I wanted them.
+This post is mostly for my own notes, but others might find it helpful. Here I'll document the process of buying, building, booting, and configuring a Raspberry Pi 4 (8GB) as a home server that runs various applications in Docker. Of course, you don't necessarily **need** to do all of the steps below to get a functional server, this is just what I did to get my Pis up and running how I wanted them.
 
 ### Assumptions
 
@@ -82,7 +82,7 @@ First off, what do you need to buy to do even do this?
 #### Initial Stuff
 
 ##### Change your password
-If you intend to use the default *pi* user, change the password. If you don't, either change it anyway or remove the user account.
+If you intend to use the default **pi** user, change the password. If you don't, either change it anyway or remove the user account.
 ```
 passwd
 ```
@@ -136,7 +136,7 @@ Enter <enter>   - To select the first sector as the start of your new partition
 Enter <enter>   - To select the last sector as the end of your new partition (Your new partition is th full size of the disk)
 Enter w         - To write the new changest to the disk
 ```
-Now let's format it. I like *ext4*. If you prefer something else, use it here.
+Now let's format it. I like **ext4**. If you prefer something else, use it here.
 ``` 
 mkfs.ext4 /dev/sda1   - /dev/sda1 because sda1 refers to the new partition we created above
 ```
@@ -145,15 +145,15 @@ Now we'll mount it.
 mkdir /storage              - You can use whatever you want here, I like /storage
 mount /dev/sda1 /storage
 ```
-Add the following to */etc/fstab* to make sure the SSD gets mounted at boot.
+Add the following to **/etc/fstab** to make sure the SSD gets mounted at boot.
 ```
 # Mount the SSD drive.
 /dev/sda1	/storage	ext4	defaults 	0	0
 ```
 
 ##### Adjust tmpfs sizes, add some mount points
-While we're mucking with */etc/fstab*, we might as well make some adjustments here we can use later.
-Add the following to */etc/fstab*
+While we're mucking with **/etc/fstab**, we might as well make some adjustments here we can use later.
+Add the following to **/etc/fstab**
 ```
 ### Mount a few paths as tmpfs so they exist in RAM instead of on disk (SD card)
 tmpfs        /tmp            tmpfs   nosuid,nodev,size=256M         0       0
@@ -169,7 +169,7 @@ tmpfs      /run		tmpfs		nosuid,nodev,size=256M 		0	0
 ```
 
 ##### Set your pi's hostname
-Edit */etc/hostname*
+Edit **/etc/hostname**
 ```
 vi /etc/hostname
 ```
@@ -178,6 +178,73 @@ vi /etc/hostname
 Reboot so you can take advantage of your newly cleaned and updated system before you do the rest of the work.
 
 We'll reboot a few times throughout this guide. Luckily these things boot super quickly.
+
+#### Make you SD Card and root filesystem read-only
+Why? Because SD cards aren't designed to be constantly written to. If you do, they'll eventually (months) degrade and fail. And that's no fun. They will still eventually fail, but this should let you run them for much much longer.
+
+##### Remove stuff that likes to write files constantly
+Oh wait, we already did this above. Check!
+
+##### Adjust your kernel parameters to turn off swap, disable filesytem checking, and operate in read-only mode
+```
+vi /boot/cmdline.txt
+# Add the following three parameters to the only line that should be there.
+fastboot noswap ro
+```
+
+##### Make your filesystem read-only
+Your **/boot** and **/** filesystems need a flag added to make them read-only. You do this via **/etc/fstab** again.
+**DO NOT** copy/paste this. Just add the **ro** to each already existing line.
+
+```
+PARTUUID=fb0d460e-01  /boot     vfat    defaults,ro          0     2
+PARTUUID=fb0d460e-02  /         ext4    defaults,noatime,ro  0     1
+```
+
+##### Move some paths to those tmpfs locations you created above
+```
+rm -rf /var/lib/dhcp /var/lib/dhcpcd5 /var/spool /etc/resolv.conf
+ln -s /tmp /var/lib/dhcp
+ln -s /tmp /var/lib/dhcpcd5
+ln -s /tmp /var/spool
+touch /tmp/dhcpcd.resolv.conf
+ln -s /tmp/dhcpcd.resolv.conf /etc/resolv.conf
+```
+
+##### Update random-seed
+
+```
+rm /var/lib/systemd/random-seed
+ln -s /tmp/random-seed /var/lib/systemd/random-seed
+vi /lib/systemd/system/systemd-random-seed.service
+# Add this line above ExecStart=
+ExecStartPre=/bin/echo "" >/tmp/random-seed
+```
+
+##### Add some aliases to make switching between read-write and read-only easier
+```
+vi /etc/bash.bashrc
+# Paste the below at the end of the file.
+set_bash_prompt() {
+    fs_mode=$(mount | sed -n -e "s/^\/dev\/.* on \/ .*(\(r[w|o]\).*/\1/p")
+    PS1='\[\033[01;32m\]\u@\h${fs_mode:+($fs_mode)}\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+}
+alias ro='sudo mount -o remount,ro / ; sudo mount -o remount,ro /boot'
+alias rw='sudo mount -o remount,rw / ; sudo mount -o remount,rw /boot ; chmod 1777 /tmp'
+```
+
+##### Create a bash_logout file to go back into ro mode when you log out.
+```
+vi /etc/bash.bash_logout
+# Paste the following, and save
+mount -o remount,ro /
+mount -o remount,ro /boot
+```
+
+##### Reboot
+Let's reboot to make sure everything is working properly.
+
+
 
 #### Install some packages
 Install a few handy packages that will make your life easier.
