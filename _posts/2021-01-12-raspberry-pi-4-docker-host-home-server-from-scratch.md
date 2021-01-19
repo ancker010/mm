@@ -87,7 +87,7 @@ passwd
 NOTE: This can probably be avoided by selecting a more light weight OS or image, but I went with the Raspberry Pi (buster) OS that had 64bit support so I could use all 8GB of the RAM.
 
 ```
-sudo apt remove 'x11-*'
+sudo apt remove "x11-*"
 sudo apt autoremove
 ```
 
@@ -104,6 +104,9 @@ Turn off some services that we won't need as a headless home server.
 systemctl disable avahi-daemon
 systemctl disable bluetooth
 systemctl disable wpa_supplicant
+systemctl disable apt-daily.timer          # More on this later
+systemctl disable apt-daily-upgrade.timer  # More on this later
+systemctl disable man-db.timer             # More on this later
 ```
 #### Reboot
 Reboot so you can take advantage of your newly cleaned and updated system before you do the rest of the work.
