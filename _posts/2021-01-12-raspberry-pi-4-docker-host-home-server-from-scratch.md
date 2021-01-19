@@ -68,22 +68,26 @@ First off, what do you need to buy to do even do this?
 
 ### Building - Putting it all together
 
+##### Pics and stuff
+
 ### Booting - Getting it running
 
-#### Create the SD card using the latest Raspberry Pi OS
+##### Create the SD card using the latest Raspberry Pi OS
 
-#### Mount the SD card in your computer to enable headless/ssh
+##### Mount the SD card in your computer to enable headless/ssh
 [Follow this guide](https://www.shellhacks.com/raspberry-pi-enable-ssh-headless-without-monitor/)
 
 ### Configuring - The bulk of the work is in here...
 
-#### Change your password
+#### Initial Stuff
+
+##### Change your password
 If you intend to use the default *pi* user, change the password. If you don't, either change it anyway or remove the user account.
 ```
 passwd
 ```
 
-#### Remove a bunch of crap you don't need
+##### Remove a bunch of crap you don't need
 NOTE: This can probably be avoided by selecting a more light weight OS or image, but I went with the Raspberry Pi (buster) OS that had 64bit support so I could use all 8GB of the RAM.
 
 ```
@@ -91,14 +95,14 @@ sudo apt remove "x11-*"
 sudo apt autoremove
 ```
 
-#### Do an OS Update
+##### Do an OS Update
 Just a good idea. The image you downloaded to your SD is likely outdated, get the latest versions of everything. This will also update you to the latest version of the RPi bootloader, if needed.
 ```
 apt update
 apt full-upgrade
 ```
 
-#### Disable a bunch of services you don't need
+##### Disable a bunch of services you don't need
 Turn off some services that we won't need as a headless home server.
 ```
 systemctl disable avahi-daemon
@@ -108,7 +112,73 @@ systemctl disable apt-daily.timer          # More on this later
 systemctl disable apt-daily-upgrade.timer  # More on this later
 systemctl disable man-db.timer             # More on this later
 ```
-#### Reboot
+
+##### Partition, Format, Mount your fancy SSD drive.
+Typical Linux process here.
+Run *dmesg* to see what device id your SSD was given, then use fdisk to partition it, them mount it and add it to /etc/fstab.
+```
+dmesg | grep sd
+[    2.111554] sd 0:0:0:0: [sda] 500118192 512-byte logical blocks: (256 GB/238 GiB)
+[    2.111752] sd 0:0:0:0: [sda] Write Protect is off
+[    2.111781] sd 0:0:0:0: [sda] Mode Sense: 43 00 00 00
+[    2.112116] sd 0:0:0:0: [sda] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
+[    2.112862] sd 0:0:0:0: [sda] Optimal transfer size 33553920 bytes
+[    2.129604]  sda:
+```
+We see that it's */dev/sda*.
+```
+fdisk /dev/sda
+Enter p         - To ensure you're on the right disk, check the reported size, etc...
+Enter n         - To create a new partition on the disk
+Enter p         - To specifiy a primary partition type
+Enter 1         - Since this is the first (and only) partition we're creating
+Enter <enter>   - To select the first sector as the start of your new partition
+Enter <enter>   - To select the last sector as the end of your new partition (Your new partition is th full size of the disk)
+Enter w         - To write the new changest to the disk
+```
+Now let's format it. I like *ext4*. If you prefer something else, use it here.
+``` 
+mkfs.ext4 /dev/sda1   - /dev/sda1 because sda1 refers to the new partition we created above
+```
+Now we'll mount it.
+```
+mkdir /storage              - You can use whatever you want here, I like /storage
+mount /dev/sda1 /storage
+```
+Add the following to */etc/fstab* to make sure the SSD gets mounted at boot.
+```
+# Mount the SSD drive.
+/dev/sda1	/storage	ext4	defaults 	0	0
+```
+
+##### Adjust tmpfs sizes, add some mount points
+While we're mucking with */etc/fstab*, we might as well make some adjustments here we can use later.
+Add the following to */etc/fstab*
+```
+### Mount a few paths as tmpfs so they exist in RAM instead of on disk (SD card)
+tmpfs        /tmp            tmpfs   nosuid,nodev,size=256M         0       0
+tmpfs        /var/log        tmpfs   nosuid,nodev,size=100M         0       0
+tmpfs        /var/tmp        tmpfs   nosuid,nodev,size=100M         0       0
+
+# And this so docker will work in RO mode
+tmpfs        /var/lib/containerd tmpfs   nosuid,nodev,size=512M         0       0
+
+### Make some default stuff smaller to save RAM
+tmpfs      /dev/shm	tmpfs		nosuid,nodev,size=256M 		0	0
+tmpfs      /run		tmpfs		nosuid,nodev,size=256M 		0	0
+```
+
+##### Reboot
 Reboot so you can take advantage of your newly cleaned and updated system before you do the rest of the work.
+
+#### Install some packages
+Install a few handy packages that will make your life easier.
+```
+apt install ntp dc telnet screen ntpdate
+```
+Yes, telnet. The telnet client, not the server, is useful for quickly checking to see if you can access open ports on another system, or locally. There's probably a better tool, sue me.
+
+##### Telegraf
+Even if you plan to run Docker (like I am, and will explain later), it's a good idea to run Telegraf as a system install.
 
 
