@@ -25,7 +25,7 @@ This post is mostly for my own notes, but others might find it helpful. Here I'l
 
 - You already have a functioning home network.
 - You know the basics of linux, networking, docker, hardware, etc.
-- All of the commands below assume you are operating as root, or understand that you need to append **sudo**
+- All of the commands below assume you are operating as root, or understand that you need to append **sudo** if using an underprivileged user
 - You can work your way around basic applications, like the Raspberry Pi Imager app
 - other stuff I remember later
 
