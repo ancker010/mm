@@ -183,6 +183,8 @@ We'll reboot a few times throughout this guide. Luckily these things boot super 
 #### Make you SD Card and root filesystem read-only
 Why? Because SD cards aren't designed to be constantly written to. If you do, they'll eventually (months) degrade and fail. And that's no fun. They will still eventually fail, but this should let you run them for much much longer.
 
+I used [this guide](https://medium.com/swlh/make-your-raspberry-pi-file-system-read-only-raspbian-buster-c558694de79) as the basis for most of this. Credit to Andreas Schallwig for the excellent write up.
+
 ##### Remove stuff that likes to write files constantly
 Oh wait, we already did this above. Check!
 
