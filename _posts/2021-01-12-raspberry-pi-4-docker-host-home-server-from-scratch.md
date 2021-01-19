@@ -25,6 +25,7 @@ This post is mostly for my own notes, but others might find it helpful. Here I'l
 
 - You already have a functioning home network.
 - You know the basics of linux, networking, docker, hardware, etc.
+- All of the commands below assume you are operating as root, or understand that you need to append **sudo**
 - You can work your way around basic applications, like the Raspberry Pi Imager app
 - other stuff I remember later
 
@@ -261,4 +262,9 @@ NOTE: I need to understand a bit better about which logs go where and how to man
 ##### Telegraf
 Even if you plan to run Docker (like I am, and will explain later), it's a good idea to run Telegraf as a system install.
 
+```
+echo "deb https://repos.influxdata.com/debian buster stable" | tee /etc/apt/sources.list.d/influxdb.list
+apt update
+apt install telegraf
+```
 
