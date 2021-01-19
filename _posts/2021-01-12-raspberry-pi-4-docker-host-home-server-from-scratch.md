@@ -91,7 +91,7 @@ passwd
 NOTE: This can probably be avoided by selecting a more light weight OS or image, but I went with the Raspberry Pi (buster) OS that had 64bit support so I could use all 8GB of the RAM.
 
 ```
-sudo apt remove "x11-*"
+sudo apt remove "x11-*" triggerhappy logrotate dphys-swapfile rsyslog
 sudo apt autoremove
 ```
 
@@ -160,7 +160,7 @@ tmpfs        /tmp            tmpfs   nosuid,nodev,size=256M         0       0
 tmpfs        /var/log        tmpfs   nosuid,nodev,size=100M         0       0
 tmpfs        /var/tmp        tmpfs   nosuid,nodev,size=100M         0       0
 
-# And this so docker will work in RO mode
+# And this so docker will work in Read-only mode
 tmpfs        /var/lib/containerd tmpfs   nosuid,nodev,size=512M         0       0
 
 ### Make some default stuff smaller to save RAM
@@ -174,9 +174,14 @@ Reboot so you can take advantage of your newly cleaned and updated system before
 #### Install some packages
 Install a few handy packages that will make your life easier.
 ```
-apt install ntp dc telnet screen ntpdate
+apt install ntp dc telnet screen ntpdate busybox-syslogd
 ```
 Yes, telnet. The telnet client, not the server, is useful for quickly checking to see if you can access open ports on another system, or locally. There's probably a better tool, sue me.
+
+Busybox-syslogd replaces rsyslog that we removed earlier. There are two ways to read logs going forward.
+1. *logread*      - ringlog that shows you a rolling list of the last N (I think it's 128 bytes) worth of logs.
+2. *journalctl*   - All of the system logs since the system booted.
+NOTE: I need to understand a bit better about which logs go where and how to manipulate that. It's on my TODO list and I'll update here when I better understand it.
 
 ##### Telegraf
 Even if you plan to run Docker (like I am, and will explain later), it's a good idea to run Telegraf as a system install.
