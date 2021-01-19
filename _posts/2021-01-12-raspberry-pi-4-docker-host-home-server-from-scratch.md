@@ -168,8 +168,16 @@ tmpfs      /dev/shm	tmpfs		nosuid,nodev,size=256M 		0	0
 tmpfs      /run		tmpfs		nosuid,nodev,size=256M 		0	0
 ```
 
+##### Set your pi's hostname
+Edit */etc/hostname*
+```
+vi /etc/hostname
+```
+
 ##### Reboot
 Reboot so you can take advantage of your newly cleaned and updated system before you do the rest of the work.
+
+We'll reboot a few times throughout this guide. Luckily these things boot super quickly.
 
 #### Install some packages
 Install a few handy packages that will make your life easier.
