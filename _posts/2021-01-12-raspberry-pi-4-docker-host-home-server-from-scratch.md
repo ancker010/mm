@@ -75,3 +75,37 @@ First off, what do you need to buy to do even do this?
 #### Mount the SD card in your computer to enable headless/ssh
 [Follow this guide](https://www.shellhacks.com/raspberry-pi-enable-ssh-headless-without-monitor/)
 
+### Configuring - The bulk of the work is in here...
+
+#### Change your password
+If you intend to use the default *pi* user, change the password. If you don't, either change it anyway or remove the user account.
+```
+passwd
+```
+
+#### Remove a bunch of crap you don't need
+NOTE: This can probably be avoided by selecting a more light weight OS or image, but I went with the Raspberry Pi (buster) OS that had 64bit support so I could use all 8GB of the RAM.
+
+```
+sudo apt remove 'x11-*'
+sudo apt autoremove
+```
+
+#### Do an OS Update
+Just a good idea. The image you downloaded to your SD is likely outdated, get the latest versions of everything. This will also update you to the latest version of the RPi bootloader, if needed.
+```
+apt update
+apt full-upgrade
+```
+
+#### Disable a bunch of services you don't need
+Turn off some services that we won't need as a headless home server.
+```
+systemctl disable avahi-daemon
+systemctl disable bluetooth
+systemctl disable wpa_supplicant
+```
+#### Reboot
+Reboot so you can take advantage of your newly cleaned and updated system before you do the rest of the work.
+
+
