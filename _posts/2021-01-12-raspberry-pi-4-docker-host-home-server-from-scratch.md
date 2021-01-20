@@ -234,6 +234,8 @@ set_bash_prompt() {
 }
 alias ro='sudo mount -o remount,ro / ; sudo mount -o remount,ro /boot'
 alias rw='sudo mount -o remount,rw / ; sudo mount -o remount,rw /boot ; chmod 1777 /tmp'
+
+PROMPT_COMMAND=set_bash_prompt
 ```
 
 ##### Create a bash_logout file to go back into ro mode when you log out.
