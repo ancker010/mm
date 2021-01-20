@@ -68,8 +68,26 @@ First off, what do you need to buy to do even do this?
 9. [USB Power Bank](https://www.amazon.com/gp/product/B08HN6JK7N/ref=ppx_yo_dt_b_asin_title_o04_s02?ie=UTF8&psc=1) (Yeah-yeah, this is only 2.4A per port, but that's probably going to be fine for my uses.)
 
 ### Building - Putting it all together
+Assembling the various pieces should be fairly self-explanatory. Hopefully if you're reading this guide, you can figure it out. Nevertheless, there's some pics below that might be helpful.
 
 ##### Pics and stuff
+First, the Raspberry Pi4 and the heat sinks that came with the kit. 
+
+(Pics here)
+
+Second, all of the pieces. The Pi4, the fan hat, the mSATA (or M.2) SSD, and the SSD adapter.
+
+(Pics here)
+
+A gotcha. The Argon fan hat has a bolt that holds the fan on the board. This bolt interferes with one of the heat sinks. I removed it so there was adequate clearance. Three out of four screws to hold the fan in place should be adequate. Here's a pic of the one to remove.
+
+(Pic here)
+
+Last, fully assembled. Minus the 1 foot USB cable between the SSD adapter and the Pi4.
+**DO NOT, I REPEAT, DO NOT** use the little U shaped USB thingy that comes with the Geekworm SSD adapter. It is NOT electronically shielded and **WILL** interfere with Wifi/bluetooth/anything nearby.
+
+(Pics here)
+
 
 ### Booting - Getting it running
 
