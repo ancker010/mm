@@ -281,7 +281,7 @@ Let's reboot to make sure everything is working properly.
 #### Install some packages
 Install a few handy packages that will make your life easier.
 ```
-apt install ntp dc telnet screen ntpdate busybox-syslogd
+apt install ntp dc telnet screen ntpdate busybox-syslogd docker-compose
 ```
 Yes, telnet. The telnet client, not the server, is useful for quickly checking to see if you can access open ports on another system, or locally. There's probably a better tool, sue me.
 
@@ -310,4 +310,47 @@ echo "deb https://repos.influxdata.com/debian buster stable" | tee /etc/apt/sour
 apt update
 apt install telegraf
 ```
+We'll come back to configuring it later when we have something to send metrics to.
+
+##### Docker
+Finding a guide to install docker is easy. I'll include my steps and the couple tweaks I made here.
+
+```
+curl -sSL https://get.docker.com | sh
+```
+Edit /etc/docker/daemon.json to place the Docker root directory on your SSD instead of the default.
+```
+vi /etc/docker/daemon.json
+### add
+{
+  "data-root": "/storage/docker-root"
+}
+```
+Turn on TCP access to the Docker socket for monitoring purposes
+```
+vi /lib/systemd/system/docker-tcp.socket
+### Paste the following:
+[Unit]
+Description=Docker Socket for the API
+PartOf=docker.service
+
+[Socket]
+ListenStream=2375
+
+BindIPv6Only=both
+Service=docker.service
+
+[Install]
+WantedBy=sockets.target
+```
+Enable the new docker-tcp.socket and restart docker.
+```
+systemctl daemon-reload
+systemctl stop docker.service
+systemctl enable docker-tcp.socket
+systemctl start docker-tcp.socket
+systemctl start docker.service
+```
+
+
 
