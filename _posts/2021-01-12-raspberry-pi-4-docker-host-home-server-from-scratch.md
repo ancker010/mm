@@ -127,9 +127,11 @@ Turn off some services that we won't need as a headless home server.
 systemctl disable avahi-daemon
 systemctl disable bluetooth
 systemctl disable wpa_supplicant
-systemctl disable apt-daily.timer          # More on this later
-systemctl disable apt-daily-upgrade.timer  # More on this later
-systemctl disable man-db.timer             # More on this later
+systemctl disable apt-daily.timer           # More on this later
+systemctl disable apt-daily.service         # More on this later
+systemctl disable apt-daily-upgrade.timer   # More on this later
+systemctl disable apt-daily-upgrade.service # More on this later
+systemctl disable man-db.timer              # More on this later
 ```
 
 ##### Partition, Format, Mount your fancy SSD drive.
@@ -263,6 +265,13 @@ vi /etc/bash.bash_logout
 mount -o remount,ro /
 mount -o remount,ro /boot
 ```
+
+#### Disable a bunch of services that try to write to disk often
+Oh wait, we already did that above.
+Remember those `systemctl disable` commands?
+We turned off **apt-daily** and **apt-daily-upgrade**.
+
+**NOTE** This means your system is no longer keeping itself up to date automatically. I will talk about a way to do this later in this post, but you can also just do it manually if you want.
 
 ##### Reboot
 Let's reboot to make sure everything is working properly.
