@@ -352,5 +352,57 @@ systemctl start docker-tcp.socket
 systemctl start docker.service
 ```
 
+Now you're ready to start running containers with docker.
+
+#### Containers
+A few of the containers I run, and how I set them up. From here on out, you can pretty much mix and match the things you want to set up or not. So skip sections for things you don't want.
+
+##### Docker Secrets
+
+Docker allows you to store credentials and other secrets in a file, then reference them in your docker-compose files. Here's how you set it up, using AWS credentials as an example.
+
+```
+mkdir /storage/secrets
+vi /storage/secrets/aws.creds
+###
+[default]
+aws_access_key_id = <key here>
+aws_secret_access_key = <key here>
+###
+chmod 600 /storage/secrets/aws.creds
+```
+
+##### Traefik
+Traefik is a reverse proxy for docker. It's a lot more than I use it for. I'm using it as a fancy way to automate running containers that expose port 80/443 (web) and generate Let's Encrypt certificates for them. If none of this interest you, or you already know how to do all of this, skip ahead.
+
+Create your docker-compose.yml file. [This is what I use](https://github.com/ancker010/rpi-home-server/raw/main/traefik/docker-compose.yml), I won't explain what everything means or all of the options are. You can use this as a starting point, or find another guide that explains it.
+
+```
+mkdir /storage/traefik
+vi /storage/traefik/docker-compose.yml
+```
+
+Create your config files. You need both **[api.toml](https://github.com/ancker010/rpi-home-server/raw/main/traefik/api.toml)** and **[traefik.toml](https://github.com/ancker010/rpi-home-server/raw/main/traefik/traefik.toml)**.
+
+The docker-compose.yml file sets up the container to mount **/storage/traefik/conf** as **/etc/traefik** inside the container, so make sure you place them in the right place on your system. Also, create a directory for traefik to store the certificate file.
+
+```
+mkdir /storage/traefik/conf
+vi /storage/traefik/conf/api.toml
+### paste stuff
+vi /storage/traefik/conf/traefik.toml
+### paste stuff
+mkdir /storage/letsencrypt
+```
+
+**NOTE**: There's a very important part of this I'm not covering in great detail. I'm using AWS Route53 to host the zone (And do DNS-01 Challenges) where I want to create Let's Encrypt certificates. You'll need to set that up, or something similar with another service. There are lots of guides on how to set that up. 
+
+Now that you're ready to go (and edited those files to match your environment), let's start it up.
+```
+cd /storage/traefik
+docker network create traefik-ext
+docker-compose up -d
+```
+
 
 
