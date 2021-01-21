@@ -272,7 +272,7 @@ Let's reboot to make sure everything is working properly.
 #### Install some packages
 Install a few handy packages that will make your life easier.
 ```
-apt install ntp dc telnet screen ntpdate busybox-syslogd watchdog
+apt install ntp dc telnet screen ntpdate busybox-syslogd
 ```
 Yes, telnet. The telnet client, not the server, is useful for quickly checking to see if you can access open ports on another system, or locally. There's probably a better tool, sue me.
 
@@ -281,22 +281,15 @@ Busybox-syslogd replaces rsyslog that we removed earlier. There are two ways to 
 2. **journalctl**   - All of the system logs since the system booted.
 NOTE: I need to understand a bit better about which logs go where and how to manipulate that. It's on my TODO list and I'll update here when I better understand it.
 
-##### Watchdog
+##### SystemD Watchdog
 This is a process that will automatically safely reboot your Pi4 if it hangs for some reason.
 You need to set it up a bit after installing it above.
 
 ```
-vi /etc/watchdog.conf
-### uncomment the following
-max-load-1 = 24
-watchdog-device = /dev/watchdog
-### add the following
-watchdog-timeout = 10
-interval = 2
-
-### Enable and start the service
-systemctl enable watchdog
-systemctl start watchdog
+vi /etc/systemd/system.conf
+### uncomment (and edit) the following life
+RuntimeWatchdogSec=1m
+systemctl daemon-reload
 ```
 
 
