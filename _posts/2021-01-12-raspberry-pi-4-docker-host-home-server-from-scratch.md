@@ -404,5 +404,5 @@ docker network create traefik-ext
 docker-compose up -d
 ```
 
-
+Once that is up and running, and you wait a few minutes. You should be able to browse to whatever container + domainname you configured in your docker-compose.yml file. So from the example it is: **traefik-docker1.home.example.com**. You should be presented with the traefik dashboard, and it should have a valid Let's Encrypt certificate. Hurray!
 
