@@ -349,7 +349,9 @@ I got most of it from [this guide](http://oostens.me/projects/raspberrypiserver/
 
 ```
 vi /etc/telegraf/telegraf.d
-### paste the file from the github repo above.
+### Paste the file from the github repo above, and save it.
+### Then restart telegraf
+systemctl restart telegraf
 ```
 
 ##### Docker
@@ -503,13 +505,12 @@ I won't get into how to create Dashboards. It's fairly easy to find a guide that
 
 To import, [follow this guide](https://grafana.com/docs/grafana/latest/dashboards/export-import/#importing-a-dashboard), copy/paste or upload the json files, select the Datasource you created above, and you should be set.
 
+Because InfluxDB has been running for a bit, and telegraf has been running for a bit, you should almost immediately see metrics in both of the Dashboards. If you don't, there might be some fun detective work to be done. 
 
 
 
 
 TODO: 
-2. InfluxDB
-3. Grafana
 4. PiHole
 5. Backups
 
