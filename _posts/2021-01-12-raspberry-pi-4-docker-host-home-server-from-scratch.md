@@ -317,11 +317,40 @@ apt install telegraf
 
 Let's set it up to send some metrics to InfluxDB. You don't have an InfluxDB running yet, but you will later. If you don't want or plan to run InfluxDB, or use some other DB, I guess just skip this part.
 
+First we need to edit the main telegraf config file to enable an InfluxDB output and tell it to talk to the local Docker socket.
 
+```
+vi /etc/telegraf/telegraf.conf
+## Look for "outputs.influxdb"
+## Uncomment the [[outputs.influxdb]] line, and edit/replace the urls field to something like the below.
+urls = ["http://influxdb.home.example.com:8086"]
+## Next enable the Docker section.
+## Look for inputs.docker, and either uncomment the bits you need, or just paste this at the bottom:
+# # Read metrics about docker containers
+[[inputs.docker]]
+  ## Docker Endpoint
+  ## To use TCP, set endpoint = "tcp://[ip]:[port]"
+  ## To use environment variables (ie, docker-machine), set endpoint = "ENV"
+  endpoint = "unix:///var/run/docker.sock"
+  ## Only collect metrics for these containers, collect all if empty
+  container_names = []
+  ## Timeout for docker list, info, and stats commands
+  timeout = "5s"
+  ## Whether to report for each container per-device blkio (8:0, 8:1...) and
+  ## network (eth0, eth1, ...) stats or not perdevice = true
+  perdevice = true
+  ## Whether to report for each container total blkio and network stats or not
+  total = false
+```
+
+Next we add the stuff to gather a bunch of stats from the RPi.
+I am using a version you can find [here](https://github.com/ancker010/rpi-home-server/raw/main/telegraf/rpi-to-influx.conf). You might need to edit it.
+I got most of it from [this guide](http://oostens.me/projects/raspberrypiserver/system-monitoring/), so it might be helpful to follow that guide. I of course, skipped the InfluxDB/Telegraf/etc stuff since I already did that stuff.
 
 ```
 vi /etc/telegraf/telegraf.d
-### pase 
+### paste the file from the github repo above.
+```
 
 ##### Docker
 Finding a guide to install docker is easy. I'll include my steps and the couple tweaks I made here.
