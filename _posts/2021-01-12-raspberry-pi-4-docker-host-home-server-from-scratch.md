@@ -93,7 +93,9 @@ Last, fully assembled. Minus the 1 foot USB cable between the SSD adapter and th
 
 ##### Create the SD card using the latest Raspberry Pi OS
 
-I STILL NEED TO ADD THIS SECTION.
+This step is pretty easy. Go [here](https://www.raspberrypi.org/software/) and download the imager for your operating system. Then insert an SD card. Then use the imager app to write the image.
+
+I didn't use any of the images included by default in the app since I wanted to run a 64-bit OS. Running 64-bit is required to take advantage of the full 8GB of RAM in the RPi4-8GB. You can downlaod it [here](https://downloads.raspberrypi.org/raspios_arm64/images/). Pick the directory with the latest date. (I used 2020-08-24.)
 
 ##### Mount the SD card in your computer to enable headless/ssh
 [Follow this guide](https://www.shellhacks.com/raspberry-pi-enable-ssh-headless-without-monitor/)
@@ -305,14 +307,21 @@ systemctl daemon-reload
 
 
 ##### Telegraf
-Even if you plan to run Docker (like I am, and will explain later), it's a good idea to run Telegraf as a system install.
+Even if you plan to run Docker (like I am, and will explain later), it's a good idea to run Telegraf as a system install. The main reason is that I want to gather system stats even if docker is broken somehow. 
 
 ```
 echo "deb https://repos.influxdata.com/debian buster stable" | tee /etc/apt/sources.list.d/influxdb.list
 apt update
 apt install telegraf
 ```
-We'll come back to configuring it later when we have something to send metrics to.
+
+Let's set it up to send some metrics to InfluxDB. You don't have an InfluxDB running yet, but you will later. If you don't want or plan to run InfluxDB, or use some other DB, I guess just skip this part.
+
+
+
+```
+vi /etc/telegraf/telegraf.d
+### pase 
 
 ##### Docker
 Finding a guide to install docker is easy. I'll include my steps and the couple tweaks I made here.
@@ -408,8 +417,68 @@ docker-compose up -d
 
 Once that is up and running, and you wait a few minutes. You should be able to browse to whatever container + domainname you configured in your docker-compose.yml file. So from the example it is: **traefik-docker1.home.example.com**. You should be presented with the traefik dashboard, and it should have a valid Let's Encrypt certificate. Hurray!
 
+##### InfluxDB
+You may want to skip this section (and the following one for Grafana) if you aren't interested in setting up dashboards for various apps and services you run on your network. But I do, and I wanted to document how I do it.
+
+Create your docker-compose.yml file. Again, [here's an example of mine](https://github.com/ancker010/rpi-home-server/raw/main/influxdb/docker-compose.yml). Same as above, you should be able to figure out what the options mean. :) 
+
+A few things you want to tweak:
+1. The influxdb admin username and password. (You'll need it later for Grafana)
+2. The hostname in the Traefik config, so it generates the correct certificate. (You'll note that the `certresolver=le` line is commented out in the example. I'm not using SSL, but you might want to for your applications.)
+
+```
+mkdir /storage/influxdb
+vi /storage/influxdb/docker-compose.yml
+```
+
+Next you just need to bring it up.
+```
+cd /storage/influxdb
+docker-compose up -d
+```
+
+Most applications (like Telegraf) that can use InfluxDB, will automatically create the databases they need the first time you run them. So running InfluxDB is really as simple as just running the container.
+
+##### Grafana
+Same as above, this section can be skipped if you want plan to build dashboards. I have dashboards for everything I can think of.
+
+1. General Service Health
+2. Docker Stats for each Server
+3. Traffic/Health of my Mikrotik Router (it's also my wireless controller for 3 Mikrotik APs)
+4. Cable Modem Health and Stats
+5. Zoneminder Event Stats
+6. Hubitat Information (Temperatures, doors open/close status, Thermostat settings, etc)
+7. Synology NAS Health and Stats
+
+You can find dashboard JSON files for some of these dashboards [here](https://github.com/ancker010/rpi-home-server/tree/main/grafana/dashboards). Most are tweaked versions I found on the Grafana Dashboard site. So YMMV if you try to run them in your environment.
+
+Anyway, let's get it running.
+
+Create your docker-compose.yml file. [Here's mine](https://github.com/ancker010/rpi-home-server/raw/main/grafana/docker-compose.yml). You'll need to tweak the hostname stuff again, and set the admin user password. You'll need it to log into the interface.
+
+```
+mkdir /storage/grafana
+vi /storage/grafana/docker-compose.yml
+```
+And run it.
+```
+cd /storage/grafana
+docker-compose up -d
+```
+
+If you wait a few minutes, you should be able to browse to the hostname you configured. Like the traefik dashboard above, you should have a valid Let's Encrypt certificate. Log in with `admin` and the password you set the docker-compose file.
+
+Next we need to add InfluxDB as a datasource. Rather than me take a bunch of screenshots, I'll just [link to the official guide from Grafana](https://grafana.com/docs/grafana/latest/datasources/influxdb/). You'll enter something like `http://influxdb.home.example.com:8086"` as the URL, and use the username and password you set in the InfluxDB docker-compose file. **NOTE** Best practice is to create an influxdb user just for grafana rather than use an admin account. You should totally do this. Don't say I didn't warn you. Your risk is probably not that high if you aren't exposing InfluxDB or Grafana outside of your home network, but still.
+
+I won't get into how to create Dashboards. It's fairly easy to find a guide that will help you with that. But since I provided some dashboards in my github repo, we can at least import the basic Server Stats and Docker Stats ones.
+
+To import, [follow this guide](https://grafana.com/docs/grafana/latest/dashboards/export-import/#importing-a-dashboard), copy/paste or upload the json files, select the Datasource you created above, and you should be set.
+
+
+
+
+
 TODO: 
-1. Create SD Card Image
 2. InfluxDB
 3. Grafana
 4. PiHole
