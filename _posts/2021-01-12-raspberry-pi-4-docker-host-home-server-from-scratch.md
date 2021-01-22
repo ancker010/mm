@@ -280,11 +280,14 @@ We turned off **apt-daily** and **apt-daily-upgrade**.
 ##### Reboot
 Let's reboot to make sure everything is working properly.
 
+**NOTE** From here on out, you might be presented with an error about the read-only filesystem. It will happen when installing packages, or editing any files that don't live on your SSH. In most cases you just need to run the `rw` command to remount as read-write.
 
 
 #### Install some packages
 Install a few handy packages that will make your life easier.
 ```
+rw # Make you filesystem read-write temporarily.
+apt update
 apt install ntp dc telnet screen ntpdate busybox-syslogd docker-compose
 ```
 Yes, telnet. The telnet client, not the server, is useful for quickly checking to see if you can access open ports on another system, or locally. There's probably a better tool, sue me.
@@ -506,8 +509,6 @@ I won't get into how to create Dashboards. It's fairly easy to find a guide that
 To import, [follow this guide](https://grafana.com/docs/grafana/latest/dashboards/export-import/#importing-a-dashboard), copy/paste or upload the json files, select the Datasource you created above, and you should be set.
 
 Because InfluxDB has been running for a bit, and telegraf has been running for a bit, you should almost immediately see metrics in both of the Dashboards. If you don't, there might be some fun detective work to be done. 
-
-
 
 
 TODO: 
