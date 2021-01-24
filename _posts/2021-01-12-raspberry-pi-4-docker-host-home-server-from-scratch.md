@@ -80,11 +80,11 @@ Assembling the various pieces should be fairly self-explanatory. Hopefully if yo
 ##### Pics and stuff
 First, the Raspberry Pi4 and the heat sinks that came with the kit. 
 
-[<img src="https://github.com/ancker010/rpi-home-server/raw/main/pics/pi_sinks.heic" width="250" />](https://github.com/ancker010/rpi-home-server/raw/main/pics/pi_sinks.heic)[<img src="https://github.com/ancker010/rpi-home-server/raw/main/pics/pi_sinks_on.heic" width="250" />](https://github.com/ancker010/rpi-home-server/raw/main/pics/pi_sinks_on.heic)
+[<img src="https://github.com/ancker010/rpi-home-server/raw/main/pics/pi_sinks.jpg" width="250" />](https://github.com/ancker010/rpi-home-server/raw/main/pics/pi_sinks.jpg)[<img src="https://github.com/ancker010/rpi-home-server/raw/main/pics/pi_sinks_on.jpg" width="250" />](https://github.com/ancker010/rpi-home-server/raw/main/pics/pi_sinks_on.jpg)
 
 Second, all of the pieces. The Pi4, the fan hat, the mSATA (or M.2) SSD, and the SSD adapter.
 
-[<img src="https://github.com/ancker010/rpi-home-server/raw/main/pics/full_parts.heic" width="250" />](https://github.com/ancker010/rpi-home-server/raw/main/pics/full_parts.heic)
+[<img src="https://github.com/ancker010/rpi-home-server/raw/main/pics/full_parts.jpg" width="250" />](https://github.com/ancker010/rpi-home-server/raw/main/pics/full_parts.jpg)
 
 A gotcha. The Argon fan hat has a bolt that holds the fan on the board. This bolt interferes with one of the heat sinks. I removed it so there was adequate clearance. Three out of four screws to hold the fan in place should be adequate. Here's a pic of the one to remove.
 
@@ -93,7 +93,7 @@ A gotcha. The Argon fan hat has a bolt that holds the fan on the board. This bol
 Last, fully assembled. Minus the 1 foot USB cable between the SSD adapter and the Pi4.
 **DO NOT, I REPEAT, DO NOT** use the little U shaped USB thingy that comes with the Geekworm SSD adapter. It is NOT electronically shielded and **WILL** interfere with Wifi/bluetooth/anything nearby.
 
-[<img src="https://github.com/ancker010/rpi-home-server/raw/main/pics/assembled_side.heic" width="250" />](https://github.com/ancker010/rpi-home-server/raw/main/pics/assembled_side.heic)[<img src="https://github.com/ancker010/rpi-home-server/raw/main/pics/assembled_top.heic" width="250" />](https://github.com/ancker010/rpi-home-server/raw/main/pics/assembled_top.heic)
+[<img src="https://github.com/ancker010/rpi-home-server/raw/main/pics/assembled_side.jpg" width="250" />](https://github.com/ancker010/rpi-home-server/raw/main/pics/assembled_side.jpg)[<img src="https://github.com/ancker010/rpi-home-server/raw/main/pics/assembled_top.jpg" width="250" />](https://github.com/ancker010/rpi-home-server/raw/main/pics/assembled_top.jpg)
 
 
 ### Booting - Getting it running
