@@ -547,7 +547,23 @@ docker-compose up -d
 ```
 
 #### Backups - In case something goes wrong
+I'm not going to cover this in great detail. You should probably already know how to back up important files. The bulk of your critical config is on the SSD drive. It's less likely to fail than the SD card, but you should probably set something up to zip/tar and compress it on a regular basis. Just don't forget to exclude the docker-root directory, you don't need to backup local versions if your docker containers.
 
-TODO: 
-5. Backups
+Your command will look something like this. It will tar (and bzip2 compress) everything under **/storage** but exclude the **docker-root** directory, any **.log** files, and your backup directory. You may also want to exclude the InfluxDB database files. They can get pretty big, and unless you really really need it, it's not a big deal to lose historical data about your cable modem or interface stats. If you want to exclude them, just add `--exclude="/storage/dockerinfluxdb/data"`.
 
+The command will write the backup file to the SSD, but be sure to remember to copy it off to a USB thumb drive, or another system frequently. Storing your backups locally doesn't help much if the drive fails, does it...
+
+```
+tar -cjvf /storage/backups/home-server-backup-ssh-`date +%m-%d-%Y`.bz2 --exclude="/storage/docker-root" --exclude="*.log" --exclude="storage/backups" /storage
+```
+
+The easiest, but downtime causing, backup method of the SD card is to just use `dd` or an app to copy the whole SD card to an image file.
+
+I was going to type up a guide for this, but realized there are a ton out there that do a better job and have screenshots. So just use something [like this](https://medium.com/@ccarnino/backup-raspberry-pi-sd-card-on-macos-the-2019-simple-way-to-clone-1517af972ca5). Or [this](https://pimylifeup.com/backup-raspberry-pi/).
+
+
+
+### Conlusion
+There you have it. You should have a fully functioning home server on your fancy new Raspberry Pi4. This post is mainly for my own purposes, documenting almost everything I did to set up my RPis. I hope it's helpful to you. I will probably update this post as I figure out new ways to do things, so hopefully it'll be consistently accurate over the years. Famous last words, I know, but hey, at least I documented this much. It's a lot more than I usually do for home projects...
+
+I don't enable comments on my posts, and odds are I don't really have time to help through problems. If you do want to reach out, use the Twitter link in the sidebar. My DMs are closed, but just tag me in a tweet and I'll see it.
