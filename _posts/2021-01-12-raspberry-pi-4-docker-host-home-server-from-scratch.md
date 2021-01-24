@@ -510,6 +510,35 @@ To import, [follow this guide](https://grafana.com/docs/grafana/latest/dashboard
 
 Because InfluxDB has been running for a bit, and telegraf has been running for a bit, you should almost immediately see metrics in both of the Dashboards. If you don't, there might be some fun detective work to be done. 
 
+##### PiHole
+If you haven't heard of PiHole, you should [look it up](https://pi-hole.net/). It's a local DNS server that will use meticulously curated lists of AD, tracking, and other malicious (or not) domains and block them on your network. It can also provide DHCP services, but my router does that.
+
+It is designed to operate on a standalone Raspberry Pi, but I choose to run mine in docker so it's a bit more portable. Here's how I set it up.
+
+Create your docker-compose.yml file. [Example here](https://github.com/ancker010/rpi-home-server/raw/main/pihole/docker-compose.yml). Tweak the file to your environment, make sure to edit the hostname for the certificate, the IP/IPv6 address, and your web admin password.
+
+```
+mkdir /storage/pihole
+vi /storage/pihole/docker-compose.yml
+```
+
+Set up DNSMASQ. This is necessary if you are running a private local zone. I have my router configured with a bunch of local-only DNS entries for all of my home network devices.
+Here's an [example config file](https://github.com/ancker010/rpi-home-server/raw/main/pihole/01-pihole.conf).
+```
+mkdir /storage/pihole/dnsmasq
+vi /storage/pihole/dnsmasq/01-pihole.conf
+```
+
+Create the log file, it complains if it doesn't already exist for some reason.
+```
+touch /storage/pihole/logs/pihole.log
+```
+And run it.
+```
+cd /storage/pihole
+docker-compose up -d
+```
+
 
 TODO: 
 4. PiHole
