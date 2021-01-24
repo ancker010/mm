@@ -355,7 +355,7 @@ urls = ["http://influxdb.home.example.com:8086"]
 
 Next we add the stuff to gather a bunch of stats from the RPi.
 I am using a version you can find [here](https://github.com/ancker010/rpi-home-server/raw/main/telegraf/rpi-to-influx.conf). You might need to edit it.
-I got most of it from [this guide](http://oostens.me/projects/raspberrypiserver/system-monitoring/), so it might be helpful to follow that guide. I of course, skipped the InfluxDB/Telegraf/etc stuff since I already did that stuff.
+I got most of it from [this guide](http://oostens.me/projects/raspberrypiserver/system-monitoring/), so it might be helpful to follow that guide. I of course, skipped the InfluxDB/Telegraf/etc stuff since I already did it above.
 
 ```
 vi /etc/telegraf/telegraf.d
@@ -406,6 +406,8 @@ systemctl start docker.service
 
 Now you're ready to start running containers with docker.
 
+**NOTE** Now might be a good time to skip ahead to the Backups section (at the end) and do a quick backup of the SD card. Backing up now gives you a nice snapshot in time before you started adding containers, and the edits and changes to the SD card are done.
+
 #### Containers
 A few of the containers I run, and how I set them up. From here on out, you can pretty much mix and match the things you want to set up or not. So skip sections for things you don't want.
 
@@ -432,6 +434,7 @@ Create your docker-compose.yml file. [This is what I use](https://github.com/anc
 ```
 mkdir /storage/traefik
 vi /storage/traefik/docker-compose.yml
+### paste and edit
 ```
 
 Create your config files. You need both **[api.toml](https://github.com/ancker010/rpi-home-server/raw/main/traefik/api.toml)** and **[traefik.toml](https://github.com/ancker010/rpi-home-server/raw/main/traefik/traefik.toml)**.
@@ -470,6 +473,7 @@ A few things you want to tweak:
 ```
 mkdir /storage/influxdb
 vi /storage/influxdb/docker-compose.yml
+### paste and edit
 ```
 
 Next you just need to bring it up.
@@ -500,6 +504,7 @@ Create your docker-compose.yml file. [Here's mine](https://github.com/ancker010/
 ```
 mkdir /storage/grafana
 vi /storage/grafana/docker-compose.yml
+### paste and edit
 ```
 And run it.
 ```
@@ -527,6 +532,7 @@ Create your docker-compose.yml file. [Example here](https://github.com/ancker010
 ```
 mkdir /storage/pihole
 vi /storage/pihole/docker-compose.yml
+### paste and edit
 ```
 
 Set up DNSMASQ. This is necessary if you are running a private local zone. I have my router configured with a bunch of local-only DNS entries for all of my home network devices.
@@ -534,6 +540,7 @@ Here's an [example config file](https://github.com/ancker010/rpi-home-server/raw
 ```
 mkdir /storage/pihole/dnsmasq
 vi /storage/pihole/dnsmasq/01-pihole.conf
+### paste and edit
 ```
 
 Create the log file, it complains if it doesn't already exist for some reason.
@@ -557,7 +564,7 @@ The command will write the backup file to the SSD, but be sure to remember to co
 tar -cjvf /storage/backups/home-server-backup-ssh-`date +%m-%d-%Y`.bz2 --exclude="/storage/docker-root" --exclude="*.log" --exclude="storage/backups" /storage
 ```
 
-The easiest, but downtime causing, backup method of the SD card is to just use `dd` or an app to copy the whole SD card to an image file.
+The easiest, but downtime causing, backup method for the SD card is to just use `dd` or an app to copy the whole SD card to an image file. This point in the guide is a good time to do it since pretty much anything else you'll need to change will be through docker.
 
 I was going to type up a guide for this, but realized there are a ton out there that do a better job and have screenshots. So just use something [like this](https://medium.com/@ccarnino/backup-raspberry-pi-sd-card-on-macos-the-2019-simple-way-to-clone-1517af972ca5). Or [this](https://pimylifeup.com/backup-raspberry-pi/).
 
