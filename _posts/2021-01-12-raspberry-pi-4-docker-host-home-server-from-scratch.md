@@ -1,5 +1,5 @@
 ---
-published: false
+published: true
 layout: posts
 comments: false
 title: Raspberry Pi 4 Docker Host/Home Server - From Scratch
