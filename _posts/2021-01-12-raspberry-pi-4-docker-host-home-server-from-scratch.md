@@ -37,9 +37,16 @@ This post is mostly for my own notes, but others might find it helpful. Here I'l
 - Booting
  - Creating a bootable SD card and editing it so it boots correctly
 - Configuring
- - The process to make it a fully functioning home server
-- Housekeeping and Monitoring
- - Setting up some backups scripts, and using Telegraf to monitor stats about the Pi itself and Docker
+ - Initial set up
+ - Remove unnecessary packages
+ - Set up the SSD
+ - Set up Read-Only Mode
+ - Install some packages
+  - Set up some monitoring stuff
+- Docker
+ - Pulling and running some containers with docker-compose
+- Backups
+ - Setting up some backups scripts
 
 
 ### Buying - Open your wallet
@@ -539,8 +546,8 @@ cd /storage/pihole
 docker-compose up -d
 ```
 
+#### Backups - In case something goes wrong
 
 TODO: 
-4. PiHole
 5. Backups
 
