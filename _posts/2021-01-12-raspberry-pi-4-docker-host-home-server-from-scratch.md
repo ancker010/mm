@@ -305,6 +305,8 @@ Busybox-syslogd replaces rsyslog that we removed earlier. There are two ways to 
 NOTE: I need to understand a bit better about which logs go where and how to manipulate that. It's on my TODO list and I'll update here when I better understand it.
 
 ##### SystemD Watchdog
+
+**SKIP THIS SECTION** This doesn't work as advertized. I'll get it sorted and update the post.
 This is a process that will automatically safely reboot your Pi4 if it hangs for some reason.
 You need to set it up a bit after installing it above.
 
