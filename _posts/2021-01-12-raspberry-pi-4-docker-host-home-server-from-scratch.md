@@ -102,7 +102,7 @@ Last, fully assembled. Minus the 1 foot USB cable between the SSD adapter and th
 
 This step is pretty easy. Go [here](https://www.raspberrypi.org/software/) and download the imager for your operating system. Then insert an SD card. Then use the imager app to write the image.
 
-I didn't use any of the images included by default in the app since I wanted to run a 64-bit OS. Running 64-bit is required to take advantage of the full 8GB of RAM in the RPi4-8GB. You can downlaod it [here](https://downloads.raspberrypi.org/raspios_arm64/images/). Pick the directory with the latest date. (I used 2020-08-24.)
+I didn't use any of the images included by default in the app since I wanted to run a 64-bit OS. Running 64-bit is required to take advantage of the full 8GB of RAM in the RPi4-8GB. You can download it [here](https://downloads.raspberrypi.org/raspios_arm64/images/). Pick the directory with the latest date. (I used 2020-08-24.)
 
 ##### Mount the SD card in your computer to enable headless/ssh
 [Follow this guide](https://www.shellhacks.com/raspberry-pi-enable-ssh-headless-without-monitor/)
@@ -306,16 +306,29 @@ NOTE: I need to understand a bit better about which logs go where and how to man
 
 ##### SystemD Watchdog
 
-**SKIP THIS SECTION** This doesn't work as advertized. I'll get it sorted and update the post.
+This doesn't work as advertized. I'll get it sorted and update the post.
 This is a process that will automatically safely reboot your Pi4 if it hangs for some reason.
-You need to set it up a bit after installing it above.
 
+First turn it on in the kernel.
+```
+vi /boot/config.txt
+### add the following line to the end of the file.
+dtparam=watchdog=on
+```
+
+Turn on the systemd watchdog service.
 ```
 vi /etc/systemd/system.conf
-### uncomment (and edit) the following life
-RuntimeWatchdogSec=1m
+### uncomment (and edit) the following lines
+RuntimeWatchdogSec=10s
+ShutdownWatchdogSec=10min
+```
+Then reload systemd.
+```
 systemctl daemon-reload
 ```
+
+After the next reboot, the systemd watchdog service will automatically reboot if the system hangs.
 
 
 ##### Telegraf
