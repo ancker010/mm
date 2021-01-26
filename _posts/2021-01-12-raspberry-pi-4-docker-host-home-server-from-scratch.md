@@ -283,7 +283,7 @@ Oh wait, we already did that above.
 Remember those `systemctl disable` commands?
 We turned off **apt-daily** and **apt-daily-upgrade**.
 
-**NOTE** This means your system is no longer keeping itself up to date automatically. I will talk about a way to do this later in this post, but you can also just do it manually if you want.
+**NOTE** This means your system is no longer keeping itself up to date automatically. You should do it manually on a regular basis. I'm a bit uneasy about having a device automatically updating packages. 
 
 #### Disable Auto-Login
 The Raspberry Pi OS will automatically log in the user *pi* at boot. This is bad. Here's how you disable it. I haven't found a non "GUI" way to do this, for whatever reason.
