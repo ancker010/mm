@@ -306,7 +306,6 @@ NOTE: I need to understand a bit better about which logs go where and how to man
 
 ##### SystemD Watchdog
 
-This doesn't work as advertized. I'll get it sorted and update the post.
 This is a process that will automatically safely reboot your Pi4 if it hangs for some reason.
 
 First turn it on in the kernel.
