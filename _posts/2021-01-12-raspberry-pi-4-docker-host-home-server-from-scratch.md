@@ -41,6 +41,7 @@ This post is mostly for my own notes, but others might find it helpful. Here I'l
  - Remove unnecessary packages
  - Set up the SSD
  - Set up Read-Only Mode
+ - Disable Auto-Login
  - Install some packages
   - Set up some monitoring stuff
 - Docker
@@ -283,6 +284,17 @@ Remember those `systemctl disable` commands?
 We turned off **apt-daily** and **apt-daily-upgrade**.
 
 **NOTE** This means your system is no longer keeping itself up to date automatically. I will talk about a way to do this later in this post, but you can also just do it manually if you want.
+
+#### Disable Auto-Login
+The Raspberry Pi OS will automatically log in the user *pi* at boot. This is bad. Here's how you disable it. I haven't found a non "GUI" way to do this, for whatever reason.
+
+```
+raspi-config
+(enter) 1 System Options ->
+(enter) S5 Boot / Auto-Login ->
+(enter) B1 Console Text console, requiring user to login ->
+(enter) B3 Desktop Desktop GUI, requiring user to login ->
+```
 
 ##### Reboot
 Let's reboot to make sure everything is working properly.
