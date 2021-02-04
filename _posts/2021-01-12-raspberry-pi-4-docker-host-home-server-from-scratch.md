@@ -394,14 +394,12 @@ I got most of it from [this guide](http://oostens.me/projects/raspberrypiserver/
 ```
 vi /etc/telegraf/telegraf.d
 ### Paste the file from the github repo above, and save it.
+### Add the telegraf user to the video group for various stat collection
+usermod -aG video telegraf
 ### Then restart telegraf
 systemctl restart telegraf
 ```
 
-One last thing. Add the `telegraf` user to the `video` group so it can pull various Raspberry Pi hardware stats.
-```
-usermod -aG video telegraf
-```
 
 ##### Docker
 Finding a guide to install docker is easy. I'll include my steps and the couple tweaks I made here.
