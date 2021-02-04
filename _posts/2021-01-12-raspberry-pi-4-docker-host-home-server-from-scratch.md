@@ -316,6 +316,14 @@ Busybox-syslogd replaces rsyslog that we removed earlier. There are two ways to 
 2. **journalctl**   - All of the system logs since the system booted.
 NOTE: I need to understand a bit better about which logs go where and how to manipulate that. It's on my TODO list and I'll update here when I better understand it.
 
+You'll also want to tweak the `journalctl` settings to only keep a certain amount of logs. I've got mine set to 64 MB. Otherwise it'll eventually fill the tmpfs we created for `/run`. And that's a bad thing.
+
+```
+vi /etc/systemd/journald.conf 
+### Uncomment and edit the following line.
+SystemMaxUse=64M
+```
+
 ##### SystemD Watchdog
 
 This is a process that will automatically safely reboot your Pi4 if it hangs for some reason.
