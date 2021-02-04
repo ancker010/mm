@@ -207,6 +207,10 @@ Edit **/etc/hostname**
 vi /etc/hostname
 ```
 
+##### Set your pi's Timezone
+You should be able to just set it via `/etc/timezone`, but that doesn't work for some reason.
+Instead, you'll use the `raspi-config` tool. Follow [this guide](https://howchoo.com/pi/how-to-set-the-timezone-on-your-raspberry-pi) if you can't figure it out. It's under Localization Options.
+
 ##### Reboot
 Reboot so you can take advantage of your newly cleaned and updated system before you do the rest of the work.
 
