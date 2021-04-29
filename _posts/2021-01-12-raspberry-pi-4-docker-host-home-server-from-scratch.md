@@ -419,7 +419,8 @@ vi /etc/docker/daemon.json
   "data-root": "/storage/docker-root"
 }
 ```
-Turn on TCP access to the Docker socket for monitoring purposes
+Turn on TCP access to the Docker socket for monitoring purposes.
+This is only required if you want a remote telegraf instance to be able to monitor the docker info from this system. I don't use this, but listed it for posterity. Most people won't need this.
 ```
 vi /lib/systemd/system/docker-tcp.socket
 ### Paste the following:
@@ -440,9 +441,11 @@ Enable the new docker-tcp.socket and restart docker.
 ```
 systemctl daemon-reload
 systemctl stop docker.service
-systemctl enable docker-tcp.socket
-systemctl start docker-tcp.socket
+# systemctl enable docker-tcp.socket # Only do this if you actually need it.
+# systemctl start docker-tcp.socket # Only do this if you actually need it.
 systemctl start docker.service
+# add telegraf user to docker group for monitoring
+usermod -aG docker telegraf
 ```
 
 Now you're ready to start running containers with docker.
