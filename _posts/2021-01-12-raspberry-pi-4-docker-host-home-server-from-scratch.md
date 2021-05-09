@@ -180,8 +180,8 @@ mount /dev/sda1 /storage
 ```
 Add the following to **/etc/fstab** to make sure the SSD gets mounted at boot.
 ```
-# Mount the SSD drive.
-/dev/sda1	/storage	ext4	defaults 	0	0
+# Mount the SSD drive. The discard option turns on TRIM which should help extend the life of your SSD.
+/dev/sda1	/storage	ext4	defaults,discard 	0	0
 ```
 
 ##### Adjust tmpfs sizes, add some mount points
