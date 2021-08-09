@@ -303,7 +303,7 @@ raspi-config
 ##### Reboot
 Let's reboot to make sure everything is working properly.
 
-**NOTE** From here on out, you might be presented with an error about the read-only filesystem. It will happen when installing packages, or editing any files that don't live on your SSH. In most cases you just need to run the `rw` command to remount as read-write.
+**NOTE** From here on out, you might be presented with an error about the read-only filesystem. It will happen when installing packages, or editing any files that don't live on your SSD. In most cases you just need to run the `rw` command to remount as read-write.
 
 
 #### Install some packages
