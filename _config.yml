@@ -75,7 +75,7 @@ author:
       url: "https://instagram.com/ancker010"
     - label: "Mastodon"
       icon: "fab fa-brands fa-mastodon"
-      url: <a rel="me" href="https://mastodon.online/@ancker">Mastodon</a>
+      url: "https://mastodon.online/@ancker"
 
 footer:
   links:
@@ -90,7 +90,7 @@ footer:
       url: "https://instagram.com/ancker010"
     - label: "Mastodon"
       icon: "fab fa-brands fa-mastodon"
-      url: <a rel="me" href="https://mastodon.online/@ancker">Mastodon</a>
+      url: "https://mastodon.online/@ancker"
 
 defaults:
   # _posts
