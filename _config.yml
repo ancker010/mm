@@ -85,6 +85,9 @@ footer:
     - label: "Instagram"
       icon: "fab fa-fw fa-instagram"
       url: "https://instagram.com/ancker010"
+    - label: "Mastodon"
+      icon: "fab fa-brands fa-mastodon"
+      url: "https://mastodon.online/@ancker&rel=me"
 
 defaults:
   # _posts
