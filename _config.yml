@@ -55,6 +55,7 @@ plugins:
   - jekyll-feed
   - jemoji
   - jekyll-include-cache
+  - jekyll-extlinks
 
 author:
   name   : "Ryan Harden"
