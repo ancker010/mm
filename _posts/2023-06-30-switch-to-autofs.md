@@ -38,7 +38,11 @@ and
 `/etc/auto.<something>`
 
 First we'll set up the master file.
+
 ```bash
+vi /etc/auto.master.d/<something>.autofs`
+<edit/paste line below>
+
 /-   /etc/auto.<something> --timeout 600 --browse
 ```
 * `/-`  indicates that the paths in the map file are non-relative.
@@ -48,6 +52,9 @@ First we'll set up the master file.
 
 Next we'll set up the map file. (You might need to create `/mnt/nfs` first)
 ```bash
+vi /etc/auto.<something>
+<edit/paste line below>
+
 /mnt/nfs/<share> -rw,fstype=nfs,soft,rsize=8192,wsize=8192 <nfs-server.example.com>:</path/to/share>
 ```
 * `/mnt/nfs/<share>` where you want the share mounted locally
